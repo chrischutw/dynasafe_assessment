@@ -1,0 +1,11 @@
+alertmanager:
+  enabled: false
+
+grafana:
+  enabled: false
+
+coreDns:
+  enabled: false
+
+kubeDns:
+  enabled: true
