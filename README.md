@@ -75,8 +75,13 @@ kubectl apply -f ingress.yaml
 ```
 
 ## 3. 安裝 Grafana 在 kind 叢集外，以 docker 或 podman 執行，datasouce 指向 Prometheus，並呈現 2 個效能監控儀表板
+- docker-compose.yaml
 ```shell
 docker-compose up -d
+```
+- /etc/hosts 加上 Kind_Node_IP 對應到 prometheus.test.net，才能從 ingress 進入
+```
+172.18.0.7    prometheus.test.net
 ```
 
 ### 3.1 效能監控儀表板(1): 呈現 node 的效能監控數據
@@ -105,15 +110,23 @@ docker-compose up -d
 ![others](image/cluster/others.png)
 
 ### 3.4 請說明要如何透過建立的監控儀表板觀察 CPU Throttling 現象
-在 CPU Usage panel 設置 
+在 CPU Usage panel 設置 CPU alert，並寄通知到 slack 或其他平台通知紀錄
 
-## 請部署一個容器應用程式在 kind 叢集，建立一個 hpa 物件以 cpu 使用率到達 50% 為條件，最多擴充到 10 個 pod
+## 4. 請部署一個容器應用程式在 kind 叢集，建立一個 hpa 物件以 cpu 使用率到達 50% 為條件，最多擴充到 10 個 pod
+- 部屬 nginx-deployment.yaml
+```shell
+kubectl apply -f nginx-deployment.yaml
+```
+- 設定 HPA
+```shell
+kubectl apply -f nginx-hpa.yaml
+```
 
 ## 後記
 
 ### Tricky 點
-- Grafana 需要跟 kind 在同一網路層
+- Grafana 需要跟 kind 在同一網路層，而因 kind 底層是 docker，所以在 docker-compose.yaml 指定使用 kind 的網路
 
 ### 地雷
-- kind 需要先加 extraPortMappings 才 ingress 才能運作
+- kind 需要加 extraPortMappings，ingress 才能運作(其實也可以開 NodePort，但比較髒)
 - windows 11 預設 80 port 不能用，因此改 8080 + 8443
