@@ -122,6 +122,16 @@ kubectl apply -f nginx-deployment.yaml
 kubectl apply -f nginx-hpa.yaml
 ```
 
+## Clean up
+- shutdown docker 
+```shell
+docker-compuse down
+```
+- shutdown kind
+```shell
+kind delete cluster
+```
+
 ## 後記
 
 ### Tricky 點
